@@ -1,0 +1,156 @@
+<!-- Author: By Joel Mukherjee(20) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Setup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); /* Fresh mint gradient for onboarding */
+        }
+        .setup-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            width: 400px;
+            text-align: center;
+        }
+        .setup-card h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .setup-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #34495e;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #43e97b;
+            outline: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background: #2ecc71;
+        }
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="setup-card">
+        <h2>Welcome to the System</h2>
+        <p>Let's establish your baseline profile so our AI can protect your account effectively.</p>
+
+        <form id="onboardingForm">
+            <div class="form-group">
+                <label>Primary Home City</label>
+                <select id="homeLocation" required>
+                    <option value="" disabled selected>Select your location...</option>
+                    <option value="Raipur">Raipur</option>
+                    <option value="Bhilai">Bhilai</option>
+                    <option value="Bilaspur">Bilaspur</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Typical Daily Spend Limit ($ / ₹)</label>
+                <input type="number" id="dailyLimit" placeholder="e.g., 5000" min="100" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Complete Setup</button>
+        </form>
+    </div>
+
+    <script>
+        // Author: By Joel Mukherjee(20)
+        
+        document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const homeLocation = document.getElementById('homeLocation').value;
+            const dailyLimit = document.getElementById('dailyLimit').value;
+            const activeUser = localStorage.getItem('activeUser'); // Retrieve the saved username
+            const submitBtn = this.querySelector('.submit-btn');
+            
+            if (!activeUser) {
+                alert("Session lost. Please register again.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            submitBtn.innerText = 'Securing Profile...';
+
+            try {
+                const response = await fetch('/api/v1/auth/onboard', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: activeUser, 
+                        homeLocation: homeLocation, 
+                        dailyLimit: dailyLimit 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Profile is permanently saved to H2! Route to personal dashboard.
+                    window.location.href = 'my-account.html'; 
+                } else {
+                    alert(data.message || 'Failed to save profile.');
+                    submitBtn.innerText = 'Complete Setup';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Could not connect to the server.');
+                submitBtn.innerText = 'Complete Setup';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!-- Author: By Joel Mukherjee(20) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | Secure Banking</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .navbar h2 { margin: 0; font-size: 20px; }
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .logout-btn:hover { background: #c0392b; }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .panel h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            color: #2980b9;
+        }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .form-group input {
+            width: 100%; padding: 10px; border: 1px solid #ccc;
+            border-radius: 5px; box-sizing: border-box;
+        }
+        .submit-btn {
+            width: 100%; padding: 12px; background: #2980b9; color: white;
+            border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+        }
+        .submit-btn:hover { background: #2471a3; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #ecf0f1; color: #333; }
+        .status-allow { color: #27ae60; font-weight: bold; }
+        .status-block { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h2>Personal Dashboard</h2>
+        <button class="logout-btn" onclick="window.location.href='login.html'">Logout</button>
+    </div>
+
+    <div class="container">
+        <!-- New Transaction Form -->
+        <div class="panel">
+            <h3>Initiate Transfer</h3>
+            <form id="personalTxnForm">
+                <div class="form-group">
+                    <label>Amount ($ / ₹)</label>
+                    <input type="number" id="txnAmount" placeholder="e.g. 1500" required>
+                </div>
+                <div class="form-group">
+                    <label>Current Location</label>
+                    <input type="text" id="txnLocation" placeholder="e.g. Raipur" required>
+                </div>
+                <button type="submit" class="submit-btn">Process Securely</button>
+            </form>
+        </div>
+
+        <!-- Personal History -->
+        <div class="panel">
+            <h3>My Transaction History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Amount</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="personalHistoryBody">
+                    <!-- Mock Data for frontend visualization -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Author: By Joel Mukherjee(20) -->
+    <script>
+        document.getElementById('personalTxnForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Stop the page from reloading
+
+            // 1. Grab the live data using the exact IDs from your HTML
+            const amount = document.getElementById('txnAmount').value;
+            const location = document.getElementById('txnLocation').value;
+            
+            // Fetch the logged-in user, fallback to a default if testing directly
+            const activeUser = localStorage.getItem('activeUser') || 'Joel Mukherjee';
+
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerText = "Processing...";
+
+            // Format time for the AI (e.g., "10:30 AM")
+            const timeOfDay = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            try {
+                // 2. Send the transaction to the Java backend
+                const response = await fetch('/api/transactions/process', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        accountId: activeUser,
+                        amount: parseFloat(amount),
+                        location: location,
+                        timeOfDay: timeOfDay
+                    })
+                });
+
+                const data = await response.json();
+
+                // 3. Dynamically generate a new row based on the AI's decision
+                const isBlocked = data.action === 'BLOCK';
+                const statusClass = isBlocked ? 'status-block' : 'status-allow'; // Uses your custom CSS classes!
+                const statusText = isBlocked ? 'BLOCKED' : 'APPROVED';
+
+                const newRow = `
+                    <tr>
+                        <td>${new Date().toLocaleTimeString()}</td>
+                        <td>₹${amount}</td>
+                        <td>${location}</td>
+                        <td class="${statusClass}">${statusText}</td>
+                    </tr>
+                `;
+
+                // 4. Inject the new row at the top of the table
+                document.getElementById('personalHistoryBody').insertAdjacentHTML('afterbegin', newRow);
+
+                // Optional: Clear the input fields for the next test
+                document.getElementById('txnAmount').value = '';
+                document.getElementById('txnLocation').value = '';
+
+            } catch (error) {
+                console.error('Transaction Error:', error);
+                alert('Failed to connect to the backend server.');
+            } finally {
+                submitBtn.innerText = "Process Securely";
+            }
+        });
+    </script>
+</body>
+</html>

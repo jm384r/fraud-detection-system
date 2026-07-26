@@ -1,0 +1,195 @@
+<!-- Author: By Joel Mukherjee(20) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Access</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+        }
+        .auth-card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: #764ba2;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #764ba2;
+            outline: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover {
+            background: #5a3780;
+        }
+        /* Hide register form by default */
+        #registerForm { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <h2 id="formTitle">Secure Login</h2>
+        <button class="toggle-btn" onclick="toggleForm()">Need an account? Register here</button>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUser" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Choose Username</label>
+                <input type="text" id="regUser" required>
+            </div>
+            <div class="form-group">
+                <label>Create Password</label>
+                <input type="password" id="regPass" required>
+            </div>
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
+    <script>
+        // Author: By Joel Mukherjee(20)
+        
+    let isLogin = true;
+    function toggleForm() {
+        isLogin = !isLogin;
+        document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+        document.getElementById('formTitle').innerText = isLogin ? 'Secure Login' : 'Create Account';
+        document.querySelector('.toggle-btn').innerText = isLogin ? 'Need an account? Register here' : 'Already have an account? Login here';
+    }
+
+    // Handle Login Submission
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Stop the page from refreshing
+            
+        const username = document.getElementById('loginUser').value;
+        const password = document.getElementById('loginPass').value;
+        const submitBtn = this.querySelector('.submit-btn');
+            
+        submitBtn.innerText = 'Authenticating...';
+
+        try {
+            const response = await fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password })
+            });
+                
+            const data = await response.json();
+                
+            if (data.status === 'success') {
+                localStorage.setItem('userRole', data.role);
+                // This is where the magic routing happens!
+                window.location.href = data.redirect; 
+            } else {
+                alert(data.message || 'Login failed.');
+                submitBtn.innerText = 'Login';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Could not connect to the backend server.');
+            submitBtn.innerText = 'Login';
+        }
+    });
+
+    // Handle Registration Submission
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+            
+        const username = document.getElementById('regUser').value;
+        const password = document.getElementById('regPass').value;
+        const submitBtn = this.querySelector('.submit-btn');
+            
+        submitBtn.innerText = 'Creating Account...';
+
+        try {
+            const response = await fetch('/api/v1/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password })
+            });
+                
+            const data = await response.json();
+
+if (data.status === 'success') {
+    // 1. Put the ID badge in the browser's memory BEFORE leaving the page
+    localStorage.setItem('userRole', data.role);
+    
+    // 2. Follow the clever backend routing you wrote!
+    window.location.href = data.redirect; 
+} else {
+    alert(data.message || "Invalid credentials");
+}
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Could not connect to the backend server.');
+            submitBtn.innerText = 'Register';
+        }
+    });
+    
+    </script>
+</body>
+</html>
