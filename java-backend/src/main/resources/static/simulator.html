@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Simulator - SentinelAI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { slate: { 950: '#020617' } } } } }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950/40 to-slate-950 text-slate-100 font-sans min-h-screen flex antialiased">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 border-r border-indigo-900/40 bg-slate-950/60 backdrop-blur-2xl flex flex-col justify-between hidden md:flex shadow-2xl shrink-0">
+        <div>
+            <!-- Logo Header -->
+            <div class="p-6 flex items-center space-x-3 border-b border-indigo-900/30">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+                    <i data-lucide="shield-alert" class="h-5 w-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-100 text-sm">SentinelAI</h1>
+                    <p class="text-[11px] text-indigo-400 font-medium">Fraud Guard Engine</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="metrics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="activity" class="h-4 w-4"></i>
+                    <span>Metrics</span>
+                </a>
+                <a href="onboarding.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="user-plus" class="h-4 w-4"></i>
+                    <span>Onboarding</span>
+                </a>
+                <a href="my-account.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="user-check" class="h-4 w-4"></i>
+                    <span>My Account</span>
+                </a>
+                <!-- Active Simulator Pill -->
+                <a href="simulator.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
+                    <i data-lucide="zap" class="h-4 w-4"></i>
+                    <span>Simulator</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Matching Bottom Officer Profile Container -->
+        <div class="p-4 border-t border-indigo-900/30">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-indigo-900/20">
+                <div class="flex items-center space-x-3">
+                    <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center font-bold text-xs text-white shadow-md shadow-indigo-600/20">
+                        JM
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-200 leading-tight">Joel Mukherjee</p>
+                        <p class="text-[10px] text-slate-400">Officer</p>
+                    </div>
+                </div>
+                <a href="login.html" class="text-slate-500 hover:text-slate-300 transition" title="Logout">
+                    <i data-lucide="log-out" class="h-4 w-4"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+        <!-- Top Darker Header with Glassmorphism & Border Separator -->
+        <header class="px-8 py-6 bg-slate-950/50 backdrop-blur-xl border-b border-indigo-900/40 w-full">
+            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                <span>Live Transaction</span>
+                <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Simulator</span>
+            </h1>
+            <p class="text-slate-400 text-xs mt-1">Dispatch test telemetry payloads directly into the SentinelAI inference pipeline.</p>
+        </header>
+
+        <!-- Centered Main Content -->
+        <div class="p-8 max-w-4xl w-full mx-auto space-y-6">
+
+            <!-- Attack Scenario Presets -->
+            <div class="p-6 rounded-2xl bg-indigo-950/20 border border-indigo-900/40 backdrop-blur-xl shadow-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-semibold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="flask-conical" class="h-4 w-4 text-indigo-400"></i>
+                        Quick Simulation Presets
+                    </h3>
+                    <span class="text-[10px] text-slate-400">Click to autofill scenario</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button type="button" onclick="loadPreset('normal')" class="text-left p-3 rounded-xl bg-slate-900/50 border border-emerald-900/40 hover:border-emerald-500/60 transition group">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-emerald-400">Legitimate Normal</span>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-900/50">ALLOW</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-tight">₹450 local retail in Raipur within standard daily bounds.</p>
+                    </button>
+
+                    <button type="button" onclick="loadPreset('speed')" class="text-left p-3 rounded-xl bg-slate-900/50 border border-red-900/40 hover:border-red-500/60 transition group">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-red-400">Impossible Velocity</span>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-950/60 text-red-400 border border-red-900/50">BLOCK</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-tight">London, UK within 2 mins of baseline (Haversine &gt; 750km/h).</p>
+                    </button>
+
+                    <button type="button" onclick="loadPreset('spike')" class="text-left p-3 rounded-xl bg-slate-900/50 border border-amber-900/40 hover:border-amber-500/60 transition group">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs font-bold text-amber-400">High Limit Breach</span>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-900/50">BLOCK</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 leading-tight">₹1,25,000 online spike exceeding ₹50,000 threshold.</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="p-8 rounded-2xl bg-indigo-950/20 border border-indigo-900/40 backdrop-blur-xl shadow-2xl space-y-5">
+                <form id="simForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-indigo-300 mb-1.5">Account ID / Username</label>
+                        <input type="text" id="accId" value="ACC029385" required class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-indigo-300 mb-1.5">Amount (₹)</label>
+                            <input type="number" id="amt" value="4500" required class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-indigo-300 mb-1.5">Transaction Location</label>
+                            <input type="text" id="loc" value="Raipur" required class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-indigo-300 mb-1.5">Payment Channel</label>
+                            <select id="channel" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none transition">
+                                <option value="UPI_OFFLINE">Physical QR (UPI_OFFLINE)</option>
+                                <option value="UPI">Online Transfer (UPI)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-indigo-300 mb-1.5">Time of Day</label>
+                            <input type="text" id="time" value="14:30 PM" required class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/30 transition-all text-sm flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="h-4 w-4"></i>
+                            <span>Fire Transaction</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Status Feedback Box -->
+                <div id="statusBox" class="mt-4 hidden p-4 rounded-xl border font-mono text-xs transition-all"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function loadPreset(type) {
+            const accId = document.getElementById('accId');
+            const amt = document.getElementById('amt');
+            const loc = document.getElementById('loc');
+            const channel = document.getElementById('channel');
+            const time = document.getElementById('time');
+
+            if (type === 'normal') {
+                accId.value = 'ACC029385';
+                amt.value = '450';
+                loc.value = 'Raipur';
+                channel.value = 'UPI_OFFLINE';
+                time.value = '14:30 PM';
+            } else if (type === 'speed') {
+                accId.value = 'ACC029385';
+                amt.value = '12500';
+                loc.value = 'London, UK';
+                channel.value = 'UPI';
+                time.value = '14:32 PM';
+            } else if (type === 'spike') {
+                accId.value = 'ACC029385';
+                amt.value = '125000';
+                loc.value = 'Raipur';
+                channel.value = 'UPI';
+                time.value = '03:15 AM';
+            }
+        }
+
+        document.getElementById('simForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="h-4 w-4 animate-spin"></i><span>Dispatching to Engine...</span>`;
+            lucide.createIcons();
+
+            statusBox.className = "mt-4 block p-4 rounded-xl border border-indigo-900/40 bg-indigo-950/30 text-indigo-300 font-mono text-xs";
+            statusBox.innerHTML = `> Ingesting payload into SentinelAI inference pipeline...`;
+
+            const payload = {
+                accountId: document.getElementById('accId').value.trim(),
+                amount: parseFloat(document.getElementById('amt').value),
+                location: document.getElementById('loc').value.trim(),
+                timeOfDay: document.getElementById('time').value.trim(),
+                channel: document.getElementById('channel').value
+            };
+
+            fetch('/api/transactions/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="send" class="h-4 w-4"></i><span>Fire Transaction</span>`;
+                lucide.createIcons();
+
+                const isBlocked = data.action === 'BLOCK';
+                const borderColor = isBlocked ? 'border-red-900/60 bg-red-950/30 text-red-300' : 'border-emerald-900/60 bg-emerald-950/30 text-emerald-300';
+                const badgeTag = isBlocked ? 'text-red-400 bg-red-950/60 border-red-800' : 'text-emerald-400 bg-emerald-950/60 border-emerald-800';
+
+                statusBox.className = `mt-4 block p-4 rounded-xl border ${borderColor} font-mono text-xs space-y-2`;
+                statusBox.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 border-b border-indigo-900/30">
+                        <span class="font-bold text-sm text-white">${isBlocked ? '🚨 TRANSACTION INTERCEPTED' : '✅ TRANSACTION APPROVED'}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold border ${badgeTag}">${data.action}</span>
+                    </div>
+                    <div><span class="text-slate-400">Risk Score:</span> <span class="font-bold text-white">${data.fraud_score !== undefined ? data.fraud_score : 'N/A'}</span></div>
+                    <div><span class="text-slate-400">AI XAI Justification:</span> <span class="text-slate-200">${data.reason || 'Verified legitimate baseline transaction'}</span></div>
+                    <div class="text-[10px] text-indigo-400 pt-1">📡 Broadcast dispatched live via WebSocket to Overview Dashboard (/topic/transactions)</div>
+                `;
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = `<i data-lucide="send" class="h-4 w-4"></i><span>Fire Transaction</span>`;
+                lucide.createIcons();
+
+                statusBox.className = "mt-4 block p-4 rounded-xl border border-red-900/50 bg-red-950/30 text-red-400 font-mono text-xs";
+                statusBox.innerText = "> Connection error with backend server.";
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,155 +1,201 @@
-<!-- Author: By Joel Mukherjee(20) -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Setup</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); /* Fresh mint gradient for onboarding */
-        }
-        .setup-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            width: 400px;
-            text-align: center;
-        }
-        .setup-card h2 {
-            margin-top: 0;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .setup-card p {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #34495e;
-            font-weight: 600;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #bdc3c7;
-            border-radius: 8px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-            font-size: 14px;
-        }
-        .form-group input:focus, .form-group select:focus {
-            border-color: #43e97b;
-            outline: none;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            margin-top: 10px;
-        }
-        .submit-btn:hover {
-            background: #2ecc71;
-        }
-        .submit-btn:active {
-            transform: scale(0.98);
-        }
-    </style>
+    <title>Onboarding - SentinelAI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { slate: { 950: '#020617' } } } } }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950/40 to-slate-950 text-slate-100 font-sans min-h-screen flex antialiased">
 
-    <div class="setup-card">
-        <h2>Welcome to the System</h2>
-        <p>Let's establish your baseline profile so our AI can protect your account effectively.</p>
-
-        <form id="onboardingForm">
-            <div class="form-group">
-                <label>Primary Home City</label>
-                <select id="homeLocation" required>
-                    <option value="" disabled selected>Select your location...</option>
-                    <option value="Raipur">Raipur</option>
-                    <option value="Bhilai">Bhilai</option>
-                    <option value="Bilaspur">Bilaspur</option>
-                    <option value="Mumbai">Mumbai</option>
-                    <option value="Delhi">Delhi</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Typical Daily Spend Limit ($ / ₹)</label>
-                <input type="number" id="dailyLimit" placeholder="e.g., 5000" min="100" required>
+    <!-- SIDEBAR -->
+    <aside class="w-64 border-r border-indigo-900/40 bg-slate-950/60 backdrop-blur-2xl flex flex-col justify-between hidden md:flex shadow-2xl shrink-0">
+        <div>
+            <!-- Logo Header -->
+            <div class="p-6 flex items-center space-x-3 border-b border-indigo-900/30">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+                    <i data-lucide="shield-alert" class="h-5 w-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-100 text-sm">SentinelAI</h1>
+                    <p class="text-[11px] text-indigo-400 font-medium">Fraud Guard Engine</p>
+                </div>
             </div>
 
-            <button type="submit" class="submit-btn">Complete Setup</button>
-        </form>
-    </div>
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="metrics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="activity" class="h-4 w-4"></i>
+                    <span>Metrics</span>
+                </a>
+                <!-- Active Onboarding Pill -->
+                <a href="onboarding.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30">
+                    <i data-lucide="user-plus" class="h-4 w-4"></i>
+                    <span>Onboarding</span>
+                </a>
+                <a href="my-account.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="user-check" class="h-4 w-4"></i>
+                    <span>My Account</span>
+                </a>
+                <a href="simulator.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-900/50 transition">
+                    <i data-lucide="zap" class="h-4 w-4"></i>
+                    <span>Simulator</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Matching Bottom Officer Profile Container -->
+        <div class="p-4 border-t border-indigo-900/30">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/50 border border-indigo-900/20">
+                <div class="flex items-center space-x-3">
+                    <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center font-bold text-xs text-white shadow-md shadow-indigo-600/20">
+                        JM
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-200 leading-tight">Joel Mukherjee</p>
+                        <p class="text-[10px] text-slate-400">Officer</p>
+                    </div>
+                </div>
+                <a href="login.html" class="text-slate-500 hover:text-slate-300 transition" title="Logout">
+                    <i data-lucide="log-out" class="h-4 w-4"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+        <!-- Top Darker Header with Glassmorphism & Border Separator -->
+        <header class="px-8 py-6 bg-slate-950/50 backdrop-blur-xl border-b border-indigo-900/40 w-full">
+            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                <span>User & Transaction</span>
+                <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Onboarding</span>
+            </h1>
+            <p class="text-slate-400 text-xs mt-1">Register new entities and baseline behavioral parameters for ML monitoring.</p>
+        </header>
+
+        <!-- Centered Main Form Container -->
+        <section class="p-8 flex-1 flex flex-col justify-start">
+            <div class="max-w-3xl w-full mx-auto p-8 rounded-2xl bg-indigo-950/20 border border-indigo-900/40 backdrop-blur-xl shadow-2xl space-y-6">
+                <div>
+                    <h3 class="text-base font-bold text-white">Register New Entity / Baseline</h3>
+                    <p class="text-xs text-slate-400 mt-1">Input user account details and baseline transactional parameters.</p>
+                </div>
+
+                <form id="onboardingForm" class="space-y-4 text-xs" onsubmit="return false;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-indigo-300 font-medium mb-1.5">Full Name</label>
+                            <input type="text" id="fullName" placeholder="e.g. Rahul Sharma" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-indigo-300 font-medium mb-1.5">Daily Limit (₹)</label>
+                            <input type="number" id="dailyLimit" placeholder="50000" value="50000" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-indigo-300 font-medium mb-1.5">Account ID / Username</label>
+                            <input type="text" id="accountNumber" placeholder="ACC-082341" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-indigo-300 font-medium mb-1.5">Initial Coordinates / Location</label>
+                            <input type="text" id="initialLocation" placeholder="21.2514, 81.6296 (Raipur)" value="Raipur" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-indigo-300 font-medium mb-1.5">Risk Threshold Profile</label>
+                        <select id="riskProfile" class="w-full bg-slate-900/50 border border-indigo-900/40 rounded-xl px-4 py-2.5 text-white focus:border-indigo-500 focus:outline-none transition">
+                            <option value="Standard">Standard (Strict)</option>
+                            <option value="Relaxed">Relaxed</option>
+                        </select>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="button" id="submitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg shadow-indigo-600/30 transition-all text-sm">
+                            Initialize Entity Monitoring
+                        </button>
+                    </div>
+                </form>
+
+                <div id="statusBox" class="mt-4 hidden p-3 rounded-xl text-xs font-semibold text-center transition-all"></div>
+            </div>
+        </section>
+    </main>
 
     <script>
-        // Author: By Joel Mukherjee(20)
-        
-        document.getElementById('onboardingForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const homeLocation = document.getElementById('homeLocation').value;
-            const dailyLimit = document.getElementById('dailyLimit').value;
-            const activeUser = localStorage.getItem('activeUser'); // Retrieve the saved username
-            const submitBtn = this.querySelector('.submit-btn');
-            
-            if (!activeUser) {
-                alert("Session lost. Please register again.");
-                window.location.href = 'login.html';
+        lucide.createIcons();
+
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const btn = document.getElementById('submitBtn');
+            const statusBox = document.getElementById('statusBox');
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const accountNumber = document.getElementById('accountNumber').value.trim();
+            const location = document.getElementById('initialLocation').value.trim() || 'Raipur';
+            const limit = document.getElementById('dailyLimit').value.trim() || '50000';
+
+            const userIdentifier = accountNumber || fullName;
+
+            if (!userIdentifier) {
+                statusBox.className = "mt-4 block p-3 rounded-xl text-xs font-semibold border border-amber-900/50 bg-amber-950/30 text-amber-400 text-center";
+                statusBox.innerText = "Please provide an Account ID or Full Name.";
                 return;
             }
 
-            submitBtn.innerText = 'Securing Profile...';
+            // Exactly matches AuthController.java keys
+            const payload = {
+                username: userIdentifier,
+                homelocation: location,
+                dailyLimit: parseFloat(limit)
+            };
 
-            try {
-                const response = await fetch('/api/v1/auth/onboard', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        username: activeUser, 
-                        homeLocation: homeLocation, 
-                        dailyLimit: dailyLimit 
-                    })
-                });
-                
-                const data = await response.json();
-                
+            btn.disabled = true;
+            btn.innerText = "Registering Entity...";
+            statusBox.className = "mt-4 block p-3 rounded-xl text-xs font-semibold border border-indigo-900/50 bg-indigo-950/30 text-indigo-300 text-center";
+            statusBox.innerText = "Securing baseline with SentinelAI core...";
+
+            fetch('/api/v1/auth/onboard', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerText = "Initialize Entity Monitoring";
+
                 if (data.status === 'success') {
-                    // Profile is permanently saved to H2! Route to personal dashboard.
-                    window.location.href = 'my-account.html'; 
+                    statusBox.className = "mt-4 block p-3 rounded-xl text-xs font-semibold border border-emerald-900/50 bg-emerald-950/30 text-emerald-400 text-center";
+                    statusBox.innerText = "✅ " + data.message;
+
+                    // Form inputs clear karein
+                    document.getElementById('fullName').value = '';
+                    document.getElementById('accountNumber').value = '';
                 } else {
-                    alert(data.message || 'Failed to save profile.');
-                    submitBtn.innerText = 'Complete Setup';
+                    statusBox.className = "mt-4 block p-3 rounded-xl text-xs font-semibold border border-amber-900/50 bg-amber-950/30 text-amber-400 text-center";
+                    statusBox.innerText = "⚠️ Backend Warning: " + (data.message || "Operation failed");
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Could not connect to the server.');
-                submitBtn.innerText = 'Complete Setup';
-            }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = "Initialize Entity Monitoring";
+                statusBox.className = "mt-4 block p-3 rounded-xl text-xs font-semibold border border-red-900/50 bg-red-950/30 text-red-400 text-center";
+                statusBox.innerText = "❌ Connection error with backend server.";
+            });
         });
     </script>
 </body>

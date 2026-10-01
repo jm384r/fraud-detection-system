@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SentinelAI Security Gateway</title>
+    <title>Register - SentinelAI Security Gateway</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -26,50 +26,49 @@
     <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
     <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
-    <!-- Login Glass Card -->
+    <!-- Register Glass Card -->
     <div class="w-full max-w-md p-8 md:p-10 rounded-3xl bg-slate-900/60 border border-rose-900/40 backdrop-blur-2xl shadow-2xl shadow-rose-950/40 space-y-6">
         
         <!-- Header & Brand -->
         <div class="text-center space-y-2">
             <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-rose-600 via-pink-600 to-indigo-600 shadow-lg shadow-rose-600/30 mb-2">
-                <i data-lucide="shield-check" class="h-8 w-8 text-white"></i>
+                <i data-lucide="user-plus" class="h-8 w-8 text-white"></i>
             </div>
             <h1 class="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-1.5">
-                <span>SentinelAI</span>
-                <span class="bg-gradient-to-r from-rose-400 via-pink-300 to-indigo-300 bg-clip-text text-transparent">Gateway</span>
+                <span>Create</span>
+                <span class="bg-gradient-to-r from-rose-400 via-pink-300 to-indigo-300 bg-clip-text text-transparent">Account</span>
             </h1>
-            <p class="text-xs text-slate-400">Enter security credentials to access the fraud intelligence command center.</p>
+            <p class="text-xs text-slate-400">Register new security personnel credentials to access SentinelAI.</p>
         </div>
 
         <!-- Alert / Feedback Banner -->
         <div id="alertBox" class="hidden p-3.5 rounded-xl border text-xs font-mono transition-all"></div>
 
         <!-- Form -->
-        <form id="loginForm" class="space-y-4">
+        <form id="registerForm" class="space-y-4">
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
                     <i data-lucide="user" class="h-3.5 w-3.5 text-rose-400"></i>
-                    <span>Username / Operator ID</span>
+                    <span>Desired Username</span>
                 </label>
                 <input 
                     type="text" 
-                    id="username" 
-                    value="admin_manager" 
+                    id="regUsername" 
                     required 
-                    placeholder="Enter assigned handle"
+                    placeholder="e.g. analyst_joel"
                     class="w-full bg-slate-950/60 border border-slate-800 focus:border-rose-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none transition shadow-inner"
                 >
+                <p class="text-[10px] text-slate-500 mt-1">Tip: Include "admin" in username for Admin privileges.</p>
             </div>
 
             <div>
                 <label class="block text-xs font-medium text-slate-300 mb-1.5 flex items-center gap-1.5">
-                    <i data-lucide="key" class="h-3.5 w-3.5 text-rose-400"></i>
-                    <span>Security Key / Password</span>
+                    <i data-lucide="lock" class="h-3.5 w-3.5 text-rose-400"></i>
+                    <span>Set Security Password</span>
                 </label>
                 <input 
                     type="password" 
-                    id="password" 
-                    value="default123" 
+                    id="regPassword" 
                     required 
                     placeholder="••••••••"
                     class="w-full bg-slate-950/60 border border-slate-800 focus:border-rose-500 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-600 focus:outline-none transition shadow-inner"
@@ -80,23 +79,23 @@
             <div class="pt-2">
                 <button 
                     type="submit" 
-                    id="submitBtn" 
+                    id="regSubmitBtn" 
                     class="w-full bg-gradient-to-r from-rose-700 via-rose-600 to-indigo-600 hover:from-rose-600 hover:via-pink-600 hover:to-indigo-500 text-white font-medium py-3 px-4 rounded-xl shadow-lg shadow-rose-950/50 hover:shadow-rose-600/30 transition-all text-xs flex items-center justify-center gap-2 group cursor-pointer"
                 >
-                    <i data-lucide="lock" class="h-3.5 w-3.5 transition-transform group-hover:scale-110"></i>
-                    <span>Authenticate Session</span>
+                    <i data-lucide="check" class="h-3.5 w-3.5 transition-transform group-hover:scale-110"></i>
+                    <span>Register Account</span>
                 </button>
             </div>
         </form>
 
         <!-- Navigation Footer -->
         <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-            <a href="index.html" class="hover:text-rose-300 transition flex items-center gap-1">
+            <a href="login.html" class="hover:text-rose-300 transition flex items-center gap-1">
                 <i data-lucide="arrow-left" class="h-3 w-3"></i>
-                <span>Direct Dashboard</span>
+                <span>Back to Login</span>
             </a>
-            <a href="register.html" class="text-indigo-400 hover:text-indigo-300 transition font-medium">
-                Register New Entity →
+            <a href="index.html" class="text-indigo-400 hover:text-indigo-300 transition font-medium">
+                Direct Dashboard →
             </a>
         </div>
 
@@ -105,26 +104,26 @@
     <script>
         lucide.createIcons();
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const btn = document.getElementById('submitBtn');
+            const btn = document.getElementById('regSubmitBtn');
             const alertBox = document.getElementById('alertBox');
-            const usernameInput = document.getElementById('username').value.trim();
-            const passwordInput = document.getElementById('password').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
 
             btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="h-3.5 w-3.5 animate-spin"></i><span>Validating Identity...</span>`;
+            btn.innerHTML = `<i data-lucide="loader-2" class="h-3.5 w-3.5 animate-spin"></i><span>Creating Account...</span>`;
             lucide.createIcons();
 
             alertBox.className = "hidden";
 
             const payload = {
-                username: usernameInput,
-                password: passwordInput
+                username: username,
+                password: password
             };
 
-            fetch('/api/v1/auth/login', {
+            fetch('/api/v1/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -134,26 +133,22 @@
             .then(async (res) => {
                 const data = await res.json();
                 if (!res.ok) {
-                    throw new Error(data.message || 'Invalid credentials. Please try again.');
+                    throw new Error(data.message || 'Registration failed. Username may already exist.');
                 }
                 return data;
             })
             .then(data => {
                 alertBox.className = "p-3 rounded-xl border border-emerald-900/50 bg-emerald-950/40 text-emerald-300 block font-mono text-xs flex items-center gap-2";
-                alertBox.innerHTML = `<i data-lucide="check-circle" class="h-4 w-4 shrink-0 text-emerald-400"></i><span>Authenticated as ${data.role || 'USER'}. Redirecting...</span>`;
+                alertBox.innerHTML = `<i data-lucide="check-circle" class="h-4 w-4 shrink-0 text-emerald-400"></i><span>Account created successfully! Redirecting to login...</span>`;
                 lucide.createIcons();
 
-                // Store logged in username in sessionStorage
-                sessionStorage.setItem('activeUser', usernameInput);
-
-                // Redirect to backend assigned page or index.html fallback
                 setTimeout(() => {
-                    window.location.href = data.redirect || 'index.html';
-                }, 900);
+                    window.location.href = 'login.html';
+                }, 1200);
             })
             .catch(err => {
                 btn.disabled = false;
-                btn.innerHTML = `<i data-lucide="lock" class="h-3.5 w-3.5"></i><span>Authenticate Session</span>`;
+                btn.innerHTML = `<i data-lucide="check" class="h-3.5 w-3.5"></i><span>Register Account</span>`;
                 lucide.createIcons();
 
                 alertBox.className = "p-3 rounded-xl border border-rose-900/50 bg-rose-950/40 text-rose-300 block font-mono text-xs flex items-center gap-2";

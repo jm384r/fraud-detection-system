@@ -71,30 +71,37 @@ public class AuthController {
         response.put("message", "Invalid credentials. Please try again.");
         return ResponseEntity.status(401).body(response);
     }
-        @PostMapping("/onboard")
+@PostMapping("/onboard")
     public ResponseEntity<Map<String, String>> completeOnboarding(@RequestBody Map<String, Object> payload) {
         Map<String, String> response = new HashMap<>();
-        
-        String username = (String) payload.get("username");
-        String location = (String) payload.get("homeLocation");
-        // Convert the incoming number to a Double safely
-        Double limit = Double.valueOf(payload.get("dailyLimit").toString());
 
-        Optional<UserAccount> userOpt = userRepository.findByUsername(username);
+        String username = payload.get("username") != null ? payload.get("username").toString() : "ACC-DEFAULT";
+        String location = payload.get("homelocation") != null ? payload.get("homelocation").toString() : "Raipur";
         
-        if (userOpt.isPresent()) {
-            UserAccount user = userOpt.get();
-            user.setHomeLocation(location);
-            user.setDailyLimit(limit);
-            userRepository.save(user); // Hibernate automatically updates the existing row!
-
-            response.put("status", "success");
-            response.put("message", "Profile baseline secured.");
-            return ResponseEntity.ok(response);
+        Double limit = 50000.0;
+        if (payload.get("dailyLimit") != null) {
+            try {
+                limit = Double.valueOf(payload.get("dailyLimit").toString());
+            } catch (Exception e) {
+                limit = 50000.0;
+            }
         }
 
-        response.put("status", "error");
-        response.put("message", "User not found.");
-        return ResponseEntity.badRequest().body(response);
+        // Check if user exists; if not, create with default required fields (password & role)
+        UserAccount user = userRepository.findByUsername(username).orElseGet(() -> {
+            UserAccount newUser = new UserAccount();
+            newUser.setUsername(username);
+            newUser.setPassword("default123"); // Required by database NOT NULL constraint
+            newUser.setRole("ROLE_USER");
+            return newUser;
+        });
+
+        user.setHomeLocation(location);
+        user.setDailyLimit(limit);
+        userRepository.save(user);
+
+        response.put("status", "success");
+        response.put("message", "Profile baseline secured for " + username);
+        return ResponseEntity.ok(response);
     }
 }

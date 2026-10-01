@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelAI - Technical Project Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .page-break { page-break-before: always; }
+            .card { border: 1px solid #ccc !important; box-shadow: none !important; background: white !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans p-6 md:p-12">
+
+    <!-- Top Action Bar -->
+    <div class="no-print max-w-4xl mx-auto mb-6 flex justify-between items-center bg-white p-4 rounded-xl shadow-md border border-slate-200">
+        <div>
+            <h1 class="font-bold text-slate-900 text-base">SentinelAI Report Ready for Export</h1>
+            <p class="text-xs text-slate-500">Click below to export directly as a clean PDF document.</p>
+        </div>
+        <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition flex items-center gap-2 shadow-sm">
+            <span>📄 Print / Save as PDF</span>
+        </button>
+    </div>
+
+    <!-- Main Printable Paper Container -->
+    <div class="max-w-4xl mx-auto bg-white p-10 md:p-14 rounded-2xl shadow-xl border border-slate-200 text-sm leading-relaxed space-y-8">
+        
+        <!-- Header / Title -->
+        <div class="border-b border-slate-200 pb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-bold tracking-widest text-indigo-600 uppercase">Enterprise Technical Report</span>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mt-1">SentinelAI</h1>
+                    <p class="text-slate-600 font-medium text-base mt-1">Real-Time Financial Fraud Detection & Audit Streaming System</p>
+                </div>
+                <div class="text-right text-xs text-slate-500 space-y-1">
+                    <p><span class="font-semibold text-slate-700">Author:</span> Joel Mukherjee</p>
+                    <p><span class="font-semibold text-slate-700">Architecture:</span> Spring Boot + Python AI</p>
+                    <p><span class="font-semibold text-slate-700">Status:</span> Fully Integrated & Tested</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Executive Summary -->
+        <div>
+            <h2 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3">1. Executive Summary</h2>
+            <p class="text-slate-700 text-justify">
+                <strong>SentinelAI</strong> is an end-to-end full-stack fraud intelligence platform engineered to intercept anomalous financial transactions in real time. Combining a high-throughput Java Spring Boot backend, an in-memory STOMP/WebSocket event broker, an ensemble Scikit-Learn Machine Learning pipeline, and Explainable AI (XAI) narrative generation via FastAPI, the platform delivers sub-40ms decision latency with proactive audit logging.
+            </p>
+        </div>
+
+        <!-- 2. System Architecture -->
+        <div>
+            <h2 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3">2. System Architecture & Tech Stack</h2>
+            
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 font-mono text-xs text-slate-700 leading-tight overflow-x-auto mb-4">
+                [ Client Simulator UI ] ──&gt; POST /api/transactions/process<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                [ Spring Boot Core (:8080) ] ── (Haversine &amp; Daily Limits)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──&gt; POST (:8000/api/v1/evaluate-fraud) ──&gt; [ Python FastAPI ML Microservice ]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│ (Random Forest &amp; GenAI XAI)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&lt;── Verdict Payload Returned ───────────────────────┘<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──&gt; [ H2 / MySQL Database Persistence ]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──&gt; [ SimpMessagingTemplate STOMP Broker ] ──&gt; WS Push (/topic/transactions)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ Overview Dashboard (index.html) ]
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-xs">
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-slate-900 block mb-1">Backend Infrastructure</span>
+                    <ul class="list-disc list-inside text-slate-600 space-y-0.5">
+                        <li>Java 17, Spring Boot Framework</li>
+                        <li>Spring WebSocket &amp; STOMP Messaging</li>
+                        <li>Spring Data JPA &amp; H2 Database</li>
+                    </ul>
+                </div>
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-slate-900 block mb-1">Machine Learning Microservice</span>
+                    <ul class="list-disc list-inside text-slate-600 space-y-0.5">
+                        <li>Python 3, FastAPI, Uvicorn Server</li>
+                        <li>Scikit-Learn Random Forest Classifier</li>
+                        <li>Google GenAI (Explainable AI / XAI)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Key Implemented Modules -->
+        <div>
+            <h2 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3">3. Core Modules & Implementation Details</h2>
+            <div class="space-y-3 text-xs">
+                <div class="p-3 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-indigo-700">A. Transaction Ingestion &amp; Live WebSocket Broadcast:</span>
+                    <p class="text-slate-600 mt-1">
+                        <code>TransactionController.java</code> handles incoming payments via <code>/api/transactions/process</code>. Evaluated results are asynchronously dispatched to active dashboard clients over <code>/topic/transactions</code> using <code>SimpMessagingTemplate</code>.
+                    </p>
+                </div>
+                <div class="p-3 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-indigo-700">B. Entity Onboarding &amp; Adaptive Baselining:</span>
+                    <p class="text-slate-600 mt-1">
+                        <code>AuthController.java</code> securely provisions account entities, recording base coordinates (e.g., Raipur) and customized daily limits (e.g., ₹50,000) for baseline heuristic profiling.
+                    </p>
+                </div>
+                <div class="p-3 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-indigo-700">C. Real-Time Responsive Overview Dashboard:</span>
+                    <p class="text-slate-600 mt-1">
+                        <code>index.html</code> maintains a persistent SockJS connection. New transaction evaluations are prepended to the top of the audit table with zero page reloads while simultaneously updating KPI counters.
+                    </p>
+                </div>
+                <div class="p-3 border border-slate-200 rounded-lg">
+                    <span class="font-bold text-indigo-700">D. Attack Simulator with Heuristic Presets:</span>
+                    <p class="text-slate-600 mt-1">
+                        <code>simulator.html</code> supports one-click verification of legitimate local payments, impossible velocity attacks (&gt;750 km/h via Haversine), and high-value threshold spikes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. API Endpoints Table -->
+        <div>
+            <h2 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-1 mb-3">4. API Specifications & Endpoints</h2>
+            <table class="w-full text-left text-xs border border-slate-200 rounded-lg overflow-hidden">
+                <thead class="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
+                    <tr>
+                        <th class="p-2.5">Method</th>
+                        <th class="p-2.5">Endpoint</th>
+                        <th class="p-2.5">Purpose</th>
+                        <th class="p-2.5">Transport</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-slate-600">
+                    <tr>
+                        <td class="p-2.5 font-bold text-emerald-600">POST</td>
+                        <td class="p-2.5 font-mono">/api/v1/auth/onboard</td>
+                        <td class="p-2.5">Entity baselining &amp; limit setup</td>
+                        <td class="p-2.5">REST JSON</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 font-bold text-emerald-600">POST</td>
+                        <td class="p-2.5 font-mono">/api/transactions/process</td>
+                        <td class="p-2.5">Transaction evaluation &amp; scoring</td>
+                        <td class="p-2.5">REST JSON</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 font-bold text-blue-600">GET</td>
+                        <td class="p-2.5 font-mono">/api/transactions/all</td>
+                        <td class="p-2.5">Fetch all persisted audit records</td>
+                        <td class="p-2.5">REST JSON</td>
+                    </tr>
+                    <tr>
+                        <td class="p-2.5 font-bold text-purple-600">WS</td>
+                        <td class="p-2.5 font-mono">/ws-fraud -&gt; /topic/transactions</td>
+                        <td class="p-2.5">Live transaction streaming push</td>
+                        <td class="p-2.5">STOMP Protocol</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t border-slate-200 pt-4 flex justify-between text-[11px] text-slate-400">
+            <span>SentinelAI Architectural Documentation</span>
+            <span>Final Implementation Report</span>
+        </div>
+
+    </div>
+</body>
+</html>

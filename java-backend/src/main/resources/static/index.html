@@ -1,319 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraud Detection Dashboard</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Vibrant background gradient */
-            margin: 0; padding: 20px;
-            color: #333;
+    <title>SentinelAI - Fraud Detection Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { slate: { 950: '#020617' } } } }
         }
-        .header { text-align: center; margin-bottom: 30px; color: #2c3e50; }
-        .header h2 { margin-bottom: 5px; font-weight: 700; }
-        .header p { margin-top: 0; font-size: 16px; opacity: 0.8; }
-        
-        .container { display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 1100px; margin: auto; }
-        @media (min-width: 768px) { .container { grid-template-columns: 1fr 1.5fr; } } /* Responsive columns */
-        
-        .panel { 
-            background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 12px; 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; 
-        }
-        .panel:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); } /* Subtle hover lift */
-        
-        h3 { margin-top: 0; color: #34495e; border-bottom: 2px solid #ddd; padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: #555; }
-        input { 
-            width: 100%; padding: 12px; box-sizing: border-box; 
-            border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: border-color 0.3s;
-        }
-        input:focus { border-color: #3498db; outline: none; }
-        button { 
-            width: 100%; padding: 14px; background: #3498db; color: white; /* Colorful button */
-            border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s, transform 0.1s;
-        }
-        button:hover { background: #2980b9; }
-        button:active { transform: scale(0.98); } /* Subtle active feedback */
-        
-        /* Table and Feed Specific Styling */
-        #feedBody tr { transition: background-color 0.3s; }
-        #feedBody tr:hover { background-color: #f0faff; } /* Row hover highlight */
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background-color: #ecf0f1; color: #34495e; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; }
-        th.sort-asc, th.sort-desc { background-color: #d6eaf8; color: #2c3e50; } /* Highlight sorted column */
-        
-        th .sort-indicator { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; opacity: 0.5; transition: opacity 0.3s, transform 0.3s; }
-        th.sort-asc .sort-indicator { opacity: 1; transform: translateY(-50%) rotate(180deg); } /* Asc arrow */
-        th.sort-desc .sort-indicator { opacity: 1; transform: translateY(-50%); } /* Desc arrow */
-        
-        .BLOCK { color: #d32f2f; font-weight: bold; background-color: #ffcdd2; padding: 6px 10px; border-radius: 15px; font-size: 13px;} /* More vibrant BLOCK */
-        .ALLOW { color: #388e3c; font-weight: bold; background-color: #c8e6c9; padding: 6px 10px; border-radius: 15px; font-size: 13px;} /* More vibrant ALLOW */
-
-        /* Search Filter Styling */
-        #searchContainer { display: flex; align-items: center; gap: 10px; width: 60%; }
-        #searchInput { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; flex-grow: 1; transition: border-color 0.3s; margin-top: 0; }
-        #searchInput:focus { border-color: #3498db; outline: none; }
-        /* Container to hold unlimited transactions with a custom scrollbar */
-.table-container {
-    max-height: 450px;
-    overflow-y: auto;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    background: white;
-    border: 1px solid #edf2f7;
-}
-
-/* Sophisticated Webkit Scrollbar */
-.table-container::-webkit-scrollbar { 
-    width: 8px; 
-}
-.table-container::-webkit-scrollbar-track { 
-    background: #f8fafc; 
-    border-radius: 10px; 
-}
-.table-container::-webkit-scrollbar-thumb { 
-    background: #cbd5e1; 
-    border-radius: 10px; 
-}
-.table-container::-webkit-scrollbar-thumb:hover { 
-    background: #94a3b8; 
-}
-
-/* Freeze the table header at the top when scrolling */
-.table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #f8fafc;
-    z-index: 1;
-    border-bottom: 2px solid #e2e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-}
-
-/* Add a subtle hover effect to rows for better readability */
-.table tbody tr:hover {
-    background-color: #f1f5f9;
-    transition: background-color 0.2s ease;
-}
-        
-    </style>
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950/40 to-slate-950 text-slate-100 font-sans min-h-screen flex antialiased selection:bg-indigo-600 selection:text-white">
 
-    <div class="header">
-        <h2>Live Transaction Monitoring System</h2>
-        <p>Dynamic Microservices Integration: Java (Spring Boot) + Python (FastAPI)</p>
-    </div>
+    <!-- SIDEBAR -->
+    <aside class="w-64 border-r border-indigo-900/40 bg-slate-950/60 backdrop-blur-2xl flex flex-col justify-between hidden md:flex shadow-2xl">
+        <div>
+            <div class="p-6 flex items-center space-x-3 border-b border-indigo-900/30">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                    <i data-lucide="shield-alert" class="h-5 w-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold tracking-tight text-slate-100 text-sm">SentinelAI</h1>
+                    <p class="text-[11px] text-indigo-400 font-medium">Fraud Guard Engine</p>
+                </div>
+            </div>
 
-    <div class="container">
-        <div class="panel">
-            <h3>Submit Transaction</h3>
-            <form id="transactionForm">
-                <div class="form-group">
-                    <label>Account ID</label>
-                    <input type="text" id="accountId" value="acc_joel_mukherjee" required>
-                </div>
-                <div class="form-group">
-                    <label>Amount (₹ / $)</label>
-                    <input type="number" id="amount" value="15000" required>
-                </div>
-                <div class="form-group">
-                    <label>Location</label>
-                    <input type="text" id="location" value="Raipur" required>
-                </div>
-                <div class="form-group">
-                    <label>Time of Day</label>
-                    <input type="text" id="timeOfDay" value="03:00 AM" required>
-                </div>
-                <button type="submit">Process Securely</button>
-            </form>
+            <nav class="p-4 space-y-1.5">
+                <a href="index.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.02]">
+                    <i data-lucide="activity" class="h-4 w-4"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="metrics.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-indigo-950/40 transition-all">
+                    <i data-lucide="cpu" class="h-4 w-4"></i>
+                    <span>Metrics</span>
+                </a>
+                <a href="onboarding.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-indigo-950/40 transition-all">
+                    <i data-lucide="user-plus" class="h-4 w-4"></i>
+                    <span>Onboarding</span>
+                </a>
+                <a href="my-account.html" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-indigo-950/40 transition-all">
+                    <i data-lucide="user" class="h-4 w-4"></i>
+                    <span>My Account</span>
+                </a>
+                <a href="simulator.html" class="flex items-center space-x-3 text-slate-400 hover:text-indigo-300 hover:bg-indigo-900/20 px-4 py-3 rounded-xl transition-colors">
+                <!-- Lightning Icon for Simulator -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span class="font-medium">Simulator</span>
+                </a>
+            </nav>
         </div>
 
-        <div class="panel">
-            <h3>
-                <span>Live AI Verdict Feed</span>
-                <div id="searchContainer">
-                    <input type="text" id="searchInput" placeholder="Filter by Account ID...">
+        <div class="p-4 border-t border-indigo-900/30">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-indigo-900/40">
+                <div class="flex items-center space-x-3">
+                    <div class="h-9 w-9 rounded-full bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center font-bold text-indigo-400 text-xs">JM</div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-semibold text-slate-200 truncate">Joel Mukherjee</p>
+                        <p class="text-[10px] text-indigo-400 truncate">Security Officer</p>
+                    </div>
                 </div>
-            </h3>
-            <div class="table-container">
-                <table id="feedTable">
-                    <thead>
-                        <tr>
-                            <th data-sort="account" class="sortable-header">Account ID<span class="sort-indicator"></span></th>
-                            <th data-sort="amount" class="sortable-header">Amount<span class="sort-indicator"></span></th>
-                            <th data-sort="score" class="sortable-header">AI Score<span class="sort-indicator"></span></th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="feedBody">
-                    </tbody>
-                </table>
+                <a href="login.html" class="text-slate-400 hover:text-red-400 transition-colors" title="Logout">
+                    <i data-lucide="log-out" class="h-4 w-4"></i>
+                </a>
             </div>
         </div>
-    </div>
+    </aside>
 
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+        <!-- BIGGER, DYNAMIC & INTERACTIVE HEADER -->
+        <header class="h-24 border-b border-indigo-900/30 bg-indigo-950/20 backdrop-blur-2xl px-8 flex items-center justify-between sticky top-0 z-20 shadow-lg">
+            <div class="flex flex-col justify-center space-y-1">
+                <h2 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
+                    Dashboard Overview
+                </h2>
+                <p class="text-xs text-indigo-300/80 font-medium">Real-time fraud telemetry and spatial anomaly monitoring</p>
+            </div>
+            <div class="flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/40 shadow-lg shadow-cyan-950/50">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-400"></span>
+                </span>
+                <span class="text-xs font-semibold tracking-wide text-cyan-300">
+                    LIVE &amp; SECURE
+                </span>
+            </div>
+        </header>
+
+        <div class="p-8 space-y-8 max-w-7xl w-full mx-auto">
+            <!-- STATS CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 rounded-2xl bg-indigo-950/30 border border-indigo-900/40 backdrop-blur-xl shadow-xl hover:border-indigo-500/50 hover:shadow-indigo-500/10 transition-all duration-300 group">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-indigo-300">Total Transactions</span>
+                        <div class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 group-hover:scale-110 transition-transform"><i data-lucide="trending-up" class="h-4 w-4"></i></div>
+                    </div>
+                    <h3 id="kpiTotal" class="text-3xl font-extrabold text-white">48,290</h3>
+                </div>
+                <div class="p-6 rounded-2xl bg-indigo-950/30 border border-indigo-900/40 backdrop-blur-xl shadow-xl hover:border-amber-500/50 hover:shadow-amber-500/10 transition-all duration-300 group">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-indigo-300">Flagged Anomalies</span>
+                        <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 group-hover:scale-110 transition-transform"><i data-lucide="alert-triangle" class="h-4 w-4"></i></div>
+                    </div>
+                    <h3 id="kpiFlagged" class="text-3xl font-extrabold text-white">684</h3>
+                </div>
+                <div class="p-6 rounded-2xl bg-indigo-950/30 border border-indigo-900/40 backdrop-blur-xl shadow-xl hover:border-emerald-500/50 hover:shadow-emerald-500/10 transition-all duration-300 group">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-indigo-300">Blocked Fraud Value</span>
+                        <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 group-hover:scale-110 transition-transform"><i data-lucide="shield-check" class="h-4 w-4"></i></div>
+                    </div>
+                    <h3 id="kpiBlockedValue" class="text-3xl font-extrabold text-white">₹42.8 Lakhs</h3>
+                </div>
+                <div class="p-6 rounded-2xl bg-indigo-950/30 border border-indigo-900/40 backdrop-blur-xl shadow-xl hover:border-purple-500/50 hover:shadow-purple-500/10 transition-all duration-300 group">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold text-indigo-300">Model Accuracy (RF)</span>
+                        <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 group-hover:scale-110 transition-transform"><i data-lucide="cpu" class="h-4 w-4"></i></div>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-white">98.7%</h3>
+                </div>
+            </div>
+
+            <!-- TABLE SECTION -->
+            <div class="p-6 rounded-2xl bg-indigo-950/20 border border-indigo-900/40 backdrop-blur-xl shadow-xl space-y-6">
+                <h3 class="text-sm font-bold text-slate-100">Recent Intercepted Transactions & XAI Audits</h3>
+                <div class="overflow-x-auto max-h-[380px] overflow-y-auto pr-1"">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="sticky top-0 bg-slate-950/90 backdrop-blur-md z-10">
+                            <tr class="border-b border-indigo-900/40 text-indigo-300 font-semibold">
+                            <tr class="border-b border-indigo-900/40 text-indigo-300 font-semibold">
+                                <th class="pb-3 px-4">TX ID</th>
+                                <th class="pb-3 px-4">User</th>
+                                <th class="pb-3 px-4">Amount</th>
+                                <th class="pb-3 px-4">Location</th>
+                                <th class="pb-3 px-4">Channel</th>
+                                <th class="pb-3 px-4">Risk Level</th>
+                                <th class="pb-3 px-4">Google GenAI XAI Justification</th>
+                            </tr>
+                        </tr>
+                        </thead>
+                        <tbody id="txTableBody" class="divide-y divide-indigo-900/20 text-slate-300">
+                            <tr class="hover:bg-indigo-900/10 transition-colors">
+                                <td class="py-4 px-4 font-mono text-indigo-400 font-medium">TX-90824</td>
+                                <td class="py-4 px-4 font-semibold text-slate-200">Rahul Sharma</td>
+                                <td class="py-4 px-4 font-bold text-white">₹1,45,000</td>
+                                <td class="py-4 px-4 text-slate-400">1,240 km (12 mins)</td>
+                                <td class="py-4 px-4"><span class="px-3 py-1 rounded-full border bg-red-500/10 border-red-500/30 text-red-400 font-semibold text-[10px]">Critical</span></td>
+                                <td class="py-4 px-4 text-slate-400">Velocity anomaly detected: Impossible geographic displacement speed.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
     <script>
-        let allTransactions = []; // Store all transactions for sorting/filtering
-        let sortCriteria = { column: 'none', direction: 'none' }; // Track current sort state
+        lucide.createIcons();
 
-        // 1. Existing form handling + storing data
-        document.getElementById('transactionForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); // Prevent page refresh
+        const tbody = document.getElementById('txTableBody');
 
-            const transactionData = {
-                accountId: document.getElementById('accountId').value,
-                amount: parseFloat(document.getElementById('amount').value),
-                location: document.getElementById('location').value,
-                timeOfDay: document.getElementById('timeOfDay').value
-            };
+        // KPI State Trackers
+        let totalCount = 0;
+        let flaggedCount = 0;
+        let blockedAmount = 0;
 
-            try {
-                // Send data to Java
-                const response = await fetch('/api/transactions/process', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(transactionData)
+        function updateKPIs(tx) {
+            totalCount++;
+            if (tx.action === 'BLOCK') {
+                flaggedCount++;
+                blockedAmount += Number(tx.amount || 0);
+            }
+
+            const kpiTotalEl = document.getElementById('kpiTotal');
+            const kpiFlaggedEl = document.getElementById('kpiFlagged');
+            const kpiBlockedEl = document.getElementById('kpiBlockedValue');
+
+            if (kpiTotalEl) kpiTotalEl.innerText = totalCount.toLocaleString();
+            if (kpiFlaggedEl) kpiFlaggedEl.innerText = flaggedCount.toLocaleString();
+            if (kpiBlockedEl) {
+                if (blockedAmount >= 100000) {
+                    kpiBlockedEl.innerText = '₹' + (blockedAmount / 100000).toFixed(1) + ' Lakhs';
+                } else {
+                    kpiBlockedEl.innerText = '₹' + blockedAmount.toLocaleString();
+                }
+            }
+        }
+
+function createRow(tx) {
+        const isBlock = tx.action === 'BLOCK';
+        const badgeClass = isBlock
+            ? 'bg-red-500/10 border-red-500/30 text-red-400'
+            : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400';
+
+        const isOffline = (tx.channel === 'UPI_OFFLINE' || tx.channel === 'STORE_QR');
+        const channelBadge = isOffline
+            ? '<span class="px-2 py-1 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] tracking-wider">STORE QR</span>'
+            : '<span class="px-2 py-1 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] tracking-wider">ONLINE UPI</span>';
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-indigo-900/10 transition-colors animate-pulse border-b border-indigo-900/20';
+
+        const txIdDisplay = tx.id ? ('TX-' + tx.id) : (tx.transactionId ? ('TX-' + tx.transactionId) : 'TX-LIVE');
+        const userDisplay = tx.accountId || tx.account_id || tx.user || 'Unknown';
+        const amtDisplay = Number(tx.amount || 0).toLocaleString('en-IN');
+        const locDisplay = tx.location || 'Local';
+        const reasonDisplay = tx.reason || (isBlock ? 'Flagged behavioral anomaly' : 'Verified Transaction');
+
+        row.innerHTML = `
+            <td class="py-4 px-4 font-mono text-indigo-400 font-medium">${txIdDisplay}</td>
+            <td class="py-4 px-4 font-semibold text-slate-200">${userDisplay}</td>
+            <td class="py-4 px-4 font-bold text-white">₹${amtDisplay}</td>
+            <td class="py-4 px-4 text-slate-300">${locDisplay}</td>
+            <td class="py-4 px-4">${channelBadge}</td>
+            <td class="py-4 px-4">
+                <span class="px-3 py-1 rounded-full border text-xs font-semibold ${badgeClass}">
+                    ${tx.action || 'REVIEW'}
+                </span>
+            </td>
+            <td class="py-4 px-4 text-slate-400 text-xs max-w-sm truncate" title="${reasonDisplay}">
+                ${reasonDisplay}
+            </td>
+        `;
+
+        setTimeout(() => row.classList.remove('animate-pulse'), 1200);
+        return row;
+    }
+
+    // 1. Initial Load: Load existing transactions from database
+    fetch('/api/transactions/all')
+        .then(res => res.json())
+        .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+                const tbody = document.getElementById('txTableBody');
+                tbody.innerHTML = ''; // Clear default rows
+
+                // Update KPI counters
+                data.forEach(tx => updateKPIs(tx));
+
+                // Table me latest transactions upar dikhane ke liye reverse
+                data.reverse().forEach(tx => {
+                    tbody.appendChild(createRow(tx));
                 });
-
-                const result = await response.json();
-
-                // 2. Add new transaction to data array and refresh table
-                const newTransactionObject = {
-                    txnId: result.transaction_id || 'N/A',
-                    account: transactionData.accountId,
-                    amount: transactionData.amount,
-                    score: result.fraud_score !== undefined ? result.fraud_score : 'Error',
-                    action: result.action || 'FAIL'
-                };
-                allTransactions.unshift(newTransactionObject); // Add to beginning
-
-                // Initial addition: just add row smoothly, sorting/filtering can be applied later
-                addTableRow(newTransactionObject); // Function to inject row into DOM
-
-                // Optionally, automatically filter/sort after adding:
-                // filterAndSortTransactions(); // Uncomment to sort/filter immediately
-                
-            } catch (error) {
-                alert('Error connecting to the backend. Are both Java and Python servers running?');
-                console.error(error);
             }
-        });
+        })
+        .catch(err => console.log('Initial fetch failed:', err));
 
-        // Function to purely add a row to the DOM smoothly
-        function addTableRow(transaction) {
-            const tableBody = document.getElementById('feedBody');
-            const newRow = document.createElement('tr');
-            newRow.classList.add('transaction-row'); // Class for filtering
-            
-            newRow.innerHTML = `
-                <td>${transaction.account}</td>
-                <td class="amount-cell">${transaction.amount}</td>
-                <td class="score-cell">${transaction.score}</td>
-                <td><span class="${transaction.action}">${transaction.action}</span></td>
-            `;
+    // 2. Real-time Listener via WebSocket (STOMP)
+    function connectSocket() {
+        const socket = new SockJS('/ws-fraud');
+        const stompClient = Stomp.over(socket);
+        stompClient.debug = null; // Clean logs
 
-            // Inject row smoothly at the top
-            tableBody.insertBefore(newRow, tableBody.firstChild);
-        }
+        stompClient.connect({}, function () {
+            console.log('✅ Connected to SentinelAI Live Stream');
 
-        // 3. Robust Sorting and Filtering Logic
+            stompClient.subscribe('/topic/transactions', function (message) {
+                try {
+                    const tx = JSON.parse(message.body);
+                    const tbody = document.getElementById('txTableBody');
 
-        // --- Filtering ---
-        document.getElementById('searchInput').addEventListener('input', function() {
-            filterAndSortTransactions();
-        });
-
-        // --- Sorting ---
-        const sortableHeaders = document.querySelectorAll('.sortable-header');
-        sortableHeaders.forEach(header => {
-            header.addEventListener('click', function() {
-                const column = this.getAttribute('data-sort');
-                updateSortCriteria(column);
-                filterAndSortTransactions();
-            });
-        });
-
-        // Update sorting state based on header clicks
-        function updateSortCriteria(column) {
-            if (sortCriteria.column === column) {
-                // Toggle direction or reset
-                if (sortCriteria.direction === 'asc') sortCriteria.direction = 'desc';
-                else if (sortCriteria.direction === 'desc') {
-                    sortCriteria.direction = 'none';
-                    sortCriteria.column = 'none';
-                }
-                else sortCriteria.direction = 'asc'; // direction was none
-            } else {
-                sortCriteria.column = column;
-                sortCriteria.direction = 'asc';
-            }
-            updateSortIndicators(); // visual updates
-        }
-
-        // Visually show sort state on headers
-        function updateSortIndicators() {
-            sortableHeaders.forEach(header => {
-                header.classList.remove('sort-asc', 'sort-desc');
-            });
-            if (sortCriteria.direction !== 'none' && sortCriteria.column !== 'none') {
-                const activeHeader = document.querySelector(`th[data-sort="${sortCriteria.column}"]`);
-                if (activeHeader) {
-                    activeHeader.classList.add(sortCriteria.direction === 'asc' ? 'sort-asc' : 'sort-desc');
-                }
-            }
-        }
-
-        // Core function: filters, sorts *all* stored data, and re-renders table
-        function filterAndSortTransactions() {
-            const tableBody = document.getElementById('feedBody');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-            // Clear current visible table
-            tableBody.innerHTML = '';
-
-            // 1. Create filtered copy of data
-            let visibleTransactions = allTransactions.filter(txn => {
-                return txn.account.toLowerCase().includes(searchTerm);
-            });
-
-            // 2. Sort the *filtered* data
-            if (sortCriteria.column !== 'none' && sortCriteria.direction !== 'none') {
-                visibleTransactions.sort((a, b) => {
-                    let valA = a[sortCriteria.column];
-                    let valB = b[sortCriteria.column];
-
-                    // Type specific comparison
-                    if (typeof valA === 'number' && typeof valB === 'number') {
-                        return sortCriteria.direction === 'asc' ? valA - valB : valB - valA;
-                    } else if (typeof valA === 'string' && typeof valB === 'string') {
-                        return sortCriteria.direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-                    } else { // Handle score could be string/number mix for errors
-                        if (typeof valA !== 'number') return sortCriteria.direction === 'asc' ? 1 : -1;
-                        if (typeof valB !== 'number') return sortCriteria.direction === 'asc' ? -1 : 1;
-                        return 0; // unexpected
+                    if (tbody) {
+                        const newRow = createRow(tx);
+                        tbody.insertBefore(newRow, tbody.firstChild);
                     }
-                });
-            }
 
-            // 3. Re-render the *sorted and filtered* rows
-            visibleTransactions.forEach(txn => {
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${txn.account}</td>
-                    <td class="amount-cell">${txn.amount}</td>
-                    <td class="score-cell">${txn.score}</td>
-                    <td><span class="${txn.action}">${txn.action}</span></td>
-                `;
-                tableBody.appendChild(newRow); // Add back to table
+                    // KPI counters instantly update
+                    updateKPIs(tx);
+                } catch (e) {
+                    console.error('Error processing live payload:', e);
+                }
             });
-        }
+        }, function (err) {
+            console.error('WebSocket connection error, retrying in 4s...', err);
+            setTimeout(connectSocket, 4000);
+        });
+    }
 
+    connectSocket();
     </script>
 </body>
 </html>
