@@ -24,7 +24,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class FraudDetectionService {
 
-    private static final String PYTHON_AI_URL = "http://localhost:8000/api/v1/evaluate-fraud";
+    private static final String PYTHON_AI_URL = "https://sentinel-ai-ml.onrender.com/api/v1/evaluate-fraud";
 
     private final TransactionRepository transactionRepository;
     private final Map<String, List<Long>> velocityCache = new ConcurrentHashMap<>();
